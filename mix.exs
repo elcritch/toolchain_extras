@@ -4,7 +4,7 @@ defmodule ToolchainExtras.MixProject do
   def project do
     [
       app: :toolchain_extras,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.4",
       nerves_package: [type: :toolchain_extras],
       start_permanent: Mix.env() == :prod,
@@ -20,7 +20,7 @@ defmodule ToolchainExtras.MixProject do
 
   defp deps do
     [
-      {:nerves, "~> 1.0-rc", runtime: false},
+      {:nerves, "~> 1.0-rc.1", runtime: false},
     ]
   end
 end
