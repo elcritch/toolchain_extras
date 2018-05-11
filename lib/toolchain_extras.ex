@@ -5,7 +5,23 @@ defmodule NervesExtras.Toolchain do
   import Mix.Nerves.Utils
 
   @doc """
-  Called as the last step of bootstrapping the Nerves env.
+  The bootstrap callback is the called during the final setup of a Nerves "build" environment.
+  This platform package looks for the `:toolchain_extras` key in the nerves package configuration.
+
+  An example from the `:toolchain_extras_pru_cgt` extras toolchain mix.exs `nerves_package` function:
+
+  ```elixir
+    toolchain_extras: [
+      env_var: "PRU_CGT",
+      build_path_link: "ti-cgt-pru",
+      build_script: "build.sh",
+      clean_files: ["ti-cgt-pru"],
+      archive_script: "scripts/archive.sh"
+    ]
+  ```
+
+  TODO: Fill out documentation for configuration options.
+
   """
   @callback bootstrap(Nerves.Package.t()) :: :ok | {:error, error :: term}
   def bootstrap(%{config: config} = pkg) do
@@ -19,7 +35,7 @@ defmodule NervesExtras.Toolchain do
     end
   end
 
-  defp default_bootstrap(%{path: path} = pkg) do
+  defp default_bootstrap(pkg) do
     artifact_path =
       Artifact.base_dir()
       |> Path.join(Artifact.name(pkg))
@@ -84,18 +100,8 @@ defmodule NervesExtras.Toolchain do
   Clean up all the build files
   """
   def clean(pkg) do
-    dmg = Artifact.name(pkg) <> ".dmg"
-    File.rm(dmg)
-
     pkg
     |> Artifact.dir()
     |> File.rm_rf()
-  end
-
-  defp defconfig(pkg) do
-    pkg.config
-    |> Keyword.get(:platform_config)
-    |> Keyword.get(:defconfig)
-    |> Path.expand()
   end
 end
