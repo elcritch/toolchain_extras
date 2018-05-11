@@ -33,16 +33,16 @@ defmodule ToolchainExtras.MixProject do
   defp package_files do
     [
       "README.md",
-      "LICENSE"
+      "LICENSE",
       "mix.exs",
       "lib",
-      "config",
+      "config"
     ]
   end
 
   defp deps do
     [
-      {:nerves, "~> 1.0", runtime: false},
+      {:nerves, "~> 1.0", runtime: false}
     ]
   end
 end
