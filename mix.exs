@@ -49,7 +49,8 @@ defmodule ToolchainExtras.MixProject do
 
   defp deps do
     [
-      {:nerves, "~> 1.0", runtime: false}
+      {:nerves, "~> 1.0", runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 end
