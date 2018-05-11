@@ -20,7 +20,7 @@ defmodule ToolchainExtras.MixProject do
 
   defp deps do
     [
-      {:nerves, "~> 1.0-rc.1", runtime: false},
+      {:nerves, "~> 1.0", runtime: false},
     ]
   end
 end
