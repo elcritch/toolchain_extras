@@ -11,8 +11,15 @@ defmodule ToolchainExtras.MixProject do
       nerves_package: [type: :toolchain_extras],
       start_permanent: Mix.env() == :prod,
       package: package(),
+      description: description(),
       deps: deps()
     ]
+  end
+
+  defp description do
+    """
+    ToolchainExtras - Basic module for adding "extra" toolchains to Nerves firmware builds. 
+    """
   end
 
   def application do
