@@ -6,7 +6,7 @@ defmodule ToolchainExtras.MixProject do
   def project do
     [
       app: @app,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.4",
       nerves_package: [type: :toolchain_extras],
       start_permanent: Mix.env() == :prod,

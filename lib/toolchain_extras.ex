@@ -69,20 +69,31 @@ defmodule NervesExtras.Toolchain do
     File.mkdir_p!(build_path)
 
     build_path
-    |> Path.join("file")
-    |> File.touch()
+    |> Path.join("scripts")
+    |> Path.join("build.sh")
 
     IO.puts("EXTRAS:BUILD: TOOLCHAIN: #{inspect(toolchain)} opts: #{opts}")
     IO.puts("EXTRAS:BUILD: PWD: #{inspect System.cwd}")
-    IO.puts("EXTRAS:BUILD: PKG: #{inspect(Artifact.name(pkg))} BUILD_PATH: #{build_path}")
+    IO.puts("EXTRAS:BUILD: PKG: #{inspect(Artifact.name(pkg))}")
+    IO.puts("EXTRAS:BUILD: BUILD_PATH: #{build_path}")
 
-    {:ok, build_path}
+    case shell(script, [defconfig, build_path]) do
+      {_, 0} -> 
+        x_tools = Path.join(build_path, "x-tools")
+        tuple = 
+          x_tools
+          |> File.ls!
+          |> List.first
+        toolchain_path = Path.join(x_tools, tuple)
+        {:ok, toolchain_path}
+      {error, _} -> {:error, error}
+    end
   end
 
   @doc """
   Create an archive of the artifact
   """
-  def archive(pkg, _toolchain, _opts) do
+  def archive(pkg, toolchain, opts) do
     build_path = Artifact.build_path(pkg)
 
     script =
@@ -90,6 +101,8 @@ defmodule NervesExtras.Toolchain do
       |> Map.get(:path)
       |> Path.join("scripts")
       |> Path.join("archive.sh")
+
+    IO.puts("EXTRAS:ARCHIVE: TOOLCHAIN: #{inspect(toolchain)} opts: #{opts}")
 
     tar_path = Path.join([build_path, Artifact.download_name(pkg) <> Artifact.ext(pkg)])
 
