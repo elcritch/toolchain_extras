@@ -68,24 +68,22 @@ defmodule NervesExtras.Toolchain do
     File.rm_rf!(build_path)
     File.mkdir_p!(build_path)
 
-    build_path
-    |> Path.join("scripts")
-    |> Path.join("build.sh")
+    script =
+      pkg
+      |> Map.get(:path)
+      |> Path.join("scripts")
+      |> Path.join("build.sh")
 
     IO.puts("EXTRAS:BUILD: TOOLCHAIN: #{inspect(toolchain)} opts: #{opts}")
     IO.puts("EXTRAS:BUILD: PWD: #{inspect System.cwd}")
     IO.puts("EXTRAS:BUILD: PKG: #{inspect(Artifact.name(pkg))}")
     IO.puts("EXTRAS:BUILD: BUILD_PATH: #{build_path}")
 
-    case shell(script, [defconfig, build_path]) do
+    install_path = Path.join(build_path, install_dir(pkg))
+
+    case shell(script, [build_path, install_path]) do
       {_, 0} -> 
-        x_tools = Path.join(build_path, "x-tools")
-        tuple = 
-          x_tools
-          |> File.ls!
-          |> List.first
-        toolchain_path = Path.join(x_tools, tuple)
-        {:ok, toolchain_path}
+        {:ok, install_path}
       {error, _} -> {:error, error}
     end
   end
@@ -120,4 +118,12 @@ defmodule NervesExtras.Toolchain do
     |> Artifact.dir()
     |> File.rm_rf()
   end
+
+  defp install_dir(pkg) do
+    pkg.config
+    |> Keyword.get(:toolchain_extras)
+    |> Keyword.get(:build_install_directory, "_build/")
+    |> Path.expand
+  end
+
 end
