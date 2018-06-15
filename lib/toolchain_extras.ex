@@ -63,7 +63,7 @@ defmodule NervesExtras.Toolchain do
     IO.inspect(path, label: :extras_build_path_link)
   end
 
-  def build(pkg, _toolchain, _opts) do
+  def build(pkg, toolchain, opts) do
     build_path = Artifact.build_path(pkg)
     File.rm_rf!(build_path)
     File.mkdir_p!(build_path)
@@ -72,7 +72,10 @@ defmodule NervesExtras.Toolchain do
     |> Path.join("file")
     |> File.touch()
 
-    IO.puts("EXTRAS_BUILD: PKG: #{inspect(Artifact.name(pkg))} BUILD_PATH: #{build_path}")
+    IO.puts("EXTRAS:BUILD: TOOLCHAIN: #{inspect(toolchain)} opts: #{opts}")
+    IO.puts("EXTRAS:BUILD: PWD: #{inspect System.cwd}")
+    IO.puts("EXTRAS:BUILD: PKG: #{inspect(Artifact.name(pkg))} BUILD_PATH: #{build_path}")
+
     {:ok, build_path}
   end
 
