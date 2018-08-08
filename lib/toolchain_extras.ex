@@ -89,8 +89,9 @@ defmodule NervesExtras.Toolchain do
     case shell(script, [build_path, install_path]) do
       {_, 0} -> 
         {:ok, install_path}
+
       {error, _} ->
-        errmsg = error_to_msg(err)
+        errmsg = error_to_msg(error)
         {:error, errmsg}
     end
   end
@@ -112,8 +113,12 @@ defmodule NervesExtras.Toolchain do
     tar_path = Path.join([build_path, Artifact.download_name(pkg) <> Artifact.ext(pkg)])
 
     case shell(script, [build_path, tar_path]) do
-      {_, 0} -> {:ok, tar_path}
-      {error, _} -> {:error, error}
+      {_, 0} ->
+        {:ok, tar_path}
+
+      {error, _} ->
+        errmsg = error_to_msg(error)
+        {:error, errmsg}
     end
   end
 
