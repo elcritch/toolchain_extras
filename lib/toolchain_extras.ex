@@ -65,6 +65,7 @@ defmodule NervesExtras.Toolchain do
 
   defp error_to_msg(stream) do
     for i <- stream, into: [] do i |> to_string() end
+    |> Enum.join("")
   end
 
   def build(pkg, toolchain, opts) do
