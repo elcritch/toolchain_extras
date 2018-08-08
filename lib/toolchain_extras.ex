@@ -63,6 +63,10 @@ defmodule NervesExtras.Toolchain do
     IO.inspect(path, label: :extras_build_path_link)
   end
 
+  defp error_to_msg(stream) do
+    for i <- stream, into: [] do i |> to_string() end
+  end
+
   def build(pkg, toolchain, opts) do
     build_path = Artifact.build_path(pkg)
     File.rm_rf!(build_path)
@@ -79,12 +83,15 @@ defmodule NervesExtras.Toolchain do
     IO.puts("EXTRAS:BUILD: PKG: #{inspect(Artifact.name(pkg))}")
     IO.puts("EXTRAS:BUILD: BUILD_PATH: #{build_path}")
 
-    install_path = Path.join(build_path, install_dir(pkg))
+    # install_path = Path.join(build_path, install_dir(pkg))
+    install_path = install_dir(pkg)
 
     case shell(script, [build_path, install_path]) do
       {_, 0} -> 
         {:ok, install_path}
-      {error, _} -> {:error, error}
+      {error, _} ->
+        errmsg = error_to_msg(err)
+        {:error, errmsg}
     end
   end
 
