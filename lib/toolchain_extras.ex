@@ -109,7 +109,9 @@ defmodule NervesExtras.Toolchain do
       |> Path.join("scripts")
       |> Path.join("archive.sh")
 
-    IO.puts("EXTRAS:ARCHIVE: TOOLCHAIN: #{inspect(toolchain)} opts: #{opts}")
+    IO.puts("EXTRAS:ARCHIVE: TOOLCHAIN: #{inspect(toolchain)} opts: #{inspect opts}")
+    IO.puts("EXTRAS:ARCHIVE: BUILD_PATH: BASE: #{inspect(build_path)} PATH: #{inspect Artifact.download_name(pkg) <> Artifact.ext(pkg)}")
+
 
     tar_path = Path.join([build_path, Artifact.download_name(pkg) <> Artifact.ext(pkg)])
 
